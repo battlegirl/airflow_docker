@@ -32,5 +32,5 @@ Finally, start docker with normal docker-compose.yml and Airflow will start.
 docker-compose up -d
 ```
 
-You can access Airflow by entering `localhost: 8080` in the url field.
+You can access Airflow by entering `localhost: 8080` in the url field.  
 url欄に`localhost:8080`を入力すると、Airflowにアクセスが可能です。
