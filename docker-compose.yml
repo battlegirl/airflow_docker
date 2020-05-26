@@ -1,0 +1,40 @@
+version: '3.7'
+
+services: 
+    postgres:
+        image: postgres:9.6
+        container_name: postgreSQL
+        environment: 
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: passwd
+            POSTGRES_DB: airflow
+            PGDATA: /var/lib/postgresql/data/pgdata
+        volumes:
+            - ./pgdata:/var/lib/postgresql/data/pgdata
+
+    webserver:
+        image: apache/airflow:1.10.10
+        container_name: airflow_webserver
+        env_file: 
+            - ./common.env
+        depends_on: 
+            - postgres
+        command: webserver
+        ports: 
+            - 8080:8080
+        volumes: 
+            - ./dags:/opt/airflow/dags
+
+    scheduler:
+        image: apache/airflow:1.10.10
+        container_name: airflow_scheduler
+        env_file: 
+            - ./common.env
+        depends_on: 
+            - postgres
+        command: scheduler
+        volumes: 
+            - ./dags:/opt/airflow/dags
+    
+    
+        
