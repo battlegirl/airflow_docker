@@ -9,6 +9,13 @@ services:
         volumes:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
+    redis:
+        image: redis:5.0.9
+        container_name: redis
+        ports: 
+            - "6379:6379"
+        
+
     webserver:
         image: apache/airflow:1.10.10
         container_name: airflow_webserver
@@ -21,6 +28,7 @@ services:
             - 8080:8080
         volumes: 
             - ./dags:/opt/airflow/dags
+            - ./credentials.json:/app/credentials.json
 
     scheduler:
         image: apache/airflow:1.10.10
@@ -32,6 +40,15 @@ services:
         command: scheduler
         volumes: 
             - ./dags:/opt/airflow/dags
+            - ./credentials.json:/app/credentials.json
     
-    
-        
+    worker:
+        image: apache/airflow:1.10.10
+        container_name: airflow_worker
+        env_file:
+            - ./airflow_common.env
+        command: worker -q ML
+        volumes:
+            - ./dags_worker:/opt/airflow/dags
+            - ./credentials.json:/app/credentials.json
+
